@@ -57,7 +57,7 @@ function! s:base.is_exit()
 		return 1
 	endif
 	let vimproc = self.__reunions_process_base.vimproc
-	return vimproc.stdout.eof || vimproc.stderr.eof
+	return vimproc.stdout.eof && vimproc.stderr.eof
 endfunctio
 
 
