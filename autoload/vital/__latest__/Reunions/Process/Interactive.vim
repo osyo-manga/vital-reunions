@@ -61,7 +61,9 @@ endfunction
 
 function! s:base.kill(...)
 	if self.__reunions_process_base.result =~ self.__reunions_process_interactive.endpat && !get(a:, 1, 0)
-		if has_key(self, "then")
+		if has_key(self, "_then")
+			call self._then(self.__reunions_process_base.result, self.as_result())
+		elseif has_key(self, "then")
 			call self.then(self.__reunions_process_base.result, self.as_result())
 		endif
 		return

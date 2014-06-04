@@ -76,7 +76,9 @@ function! s:base.kill(...)
 		let self.__reunions_process_base.status = "kill"
 	endif
 
-	if has_key(self, "then")
+	if has_key(self, "_then")
+		call self._then(self.__reunions_process_base.result, self.as_result())
+	elseif has_key(self, "then")
 		call self.then(self.__reunions_process_base.result, self.as_result())
 	endif
 

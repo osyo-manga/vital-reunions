@@ -7,6 +7,7 @@ function! s:_vital_loaded(V)
 	let s:V = a:V
 	let s:Task = s:V.import("Reunions.Task")
 	let s:Process = s:V.import("Reunions.Process")
+	let s:Web = s:V.import("Reunions.Web")
 endfunction
 
 
@@ -14,6 +15,7 @@ function! s:_vital_depends()
 	return [
 \		"Reunions.Task",
 \		"Reunions.Process",
+\		"Reunions.Web",
 \	]
 endfunction
 
@@ -74,6 +76,13 @@ function! s:interactive(...)
 	return process
 endfunction
 
+
+function! s:http_get(...)
+	let process = call(s:Web.make_get_process, a:000, s:Web)
+	let process = s:register(s:Process.as_autokill_task(process))
+	call process.start()
+	return process
+endfunction
 
 
 function! s:log()
