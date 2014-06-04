@@ -60,6 +60,7 @@ endfunction
 
 
 function! s:base.update()
+	let except = 0
 	for task in self.variables.tasks
 		try
 			if has_key(task, "__reunions_task_apply")
@@ -69,8 +70,14 @@ function! s:base.update()
 			endif
 		catch
 			call self.add_log("Except in task_group.update")
+			let except = 1
 		endtry
 	endfor
+	if except
+		echohl "Error"
+		echo "vital-reunions : exception in update()."
+		echohl "NONE"
+	endif
 endfunction
 
 
