@@ -4,7 +4,7 @@ call vital#of("vital").unload()
 let s:Reunions = vital#of("vital").import("Reunions")
 
 " GET を行うプロセスを開始する
-" GET は  curl か wget を使用して行われる
+" GET は curl か wget を使用して行われる
 let s:process = s:Reunions.http_get("http://www.vim.org/")
 
 " 終了時の処理
