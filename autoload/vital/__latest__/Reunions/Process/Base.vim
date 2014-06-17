@@ -91,6 +91,11 @@ function! s:base.kill(...)
 endfunction
 
 
+function! s:base.kill_force()
+	return self.kill(1)
+endfunction
+
+
 function! s:base.is_killed()
 	return self.status() == "success"
 \		|| self.status() == "failure"
