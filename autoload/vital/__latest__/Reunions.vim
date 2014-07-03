@@ -54,7 +54,7 @@ endfunction
 
 
 function! s:timer(...)
-	let  call(s:Task.make_timer, a:000, s:Task)
+	return call(s:Task.make_timer, a:000, s:Task)
 endfunction
 
 
