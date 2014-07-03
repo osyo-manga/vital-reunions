@@ -85,6 +85,14 @@ function! s:http_get(...)
 endfunction
 
 
+function! s:http_post(...)
+	let process = call(s:Web.make_post_process, a:000, s:Web)
+	let process = s:register(s:Process.as_autokill_task(process))
+	call process.start()
+	return process
+endfunction
+
+
 function! s:log()
 	return s:Task.log()
 endfunction

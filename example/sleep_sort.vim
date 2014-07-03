@@ -17,7 +17,7 @@ endfunction
 
 call s:sort([5, 1, 4, 9, 3, 7, 2, 8, 0, 6])
 
-augroup test
+augroup reunions-example
 	autocmd!
 	autocmd CursorHold * call s:Reunions.update_in_cursorhold(1)
 augroup END

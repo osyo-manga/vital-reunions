@@ -1,20 +1,21 @@
-" 非同期で HTTP GET を行う
+" 非同期で HTTP POST を行う
 
 call vital#of("vital").unload()
-let s:Reunions = vital#of("vital").import("Reunions")
+let s:V = vital#of("vital")
+let s:Reunions = s:V.import("Reunions")
+let s:JSON = s:V.import("Web.JSON")
 
-" GET を行うプロセスを開始する
-" GET は curl か wget を使用して行われる
-let s:process = s:Reunions.http_get("http://www.vim.org/")
+" POST を行うプロセスを開始する
+" POST は curl か wget を使用して行われる
+let s:process = s:Reunions.http_post("http://vim-help-jp.herokuapp.com/search", { "in": "indent" })
 
 " 終了時の処理
 function! s:process.then(output, ...)
-	" header を出力
-	echom string(a:output.header)
+	echom string(s:JSON.decode(a:output.content))
 endfunction
 
 
-" GET の実行中にコマンドラインにメッセージを出力する
+" POST の実行中にコマンドラインにメッセージを出力する
 let s:message = {}
 let s:message.process = s:process
 

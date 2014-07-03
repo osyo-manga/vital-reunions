@@ -32,7 +32,7 @@ function! s:irb.then(output, ...)
 endfunction
 
 
-augroup test
+augroup reunions-test
 	autocmd!
 	autocmd CursorHold * call s:Reunions.update_in_cursorhold(1)
 augroup END

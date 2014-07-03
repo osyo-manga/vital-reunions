@@ -30,7 +30,7 @@ endfunction
 call s:Reunions.register(s:kill_check_task)
 
 
-augroup test
+augroup reunions-example
 	autocmd!
 	autocmd CursorHold * call s:Reunions.update_in_cursorhold(1)
 augroup END

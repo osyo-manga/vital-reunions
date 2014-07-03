@@ -62,6 +62,54 @@ function! s:build_get_command(url, ...)
 endfunction
 
 
+
+function! s:build_post_command(url, ...)
+  let postdata = a:0 > 0 ? a:000[0] : {}
+  let headdata = a:0 > 1 ? a:000[1] : {}
+  let method = a:0 > 2 ? a:000[2] : "POST"
+  let follow = a:0 > 3 ? a:000[3] : 1
+  let url = a:url
+  if type(postdata) == 4
+"     let postdatastr = webapi#http#encodeURI(postdata)
+      let postdatastr = s:HTTP.encodeURI(postdata)
+  else
+    let postdatastr = postdata
+  endif
+  let file = tempname()
+  if executable('curl')
+    let command = printf('curl %s -s -k -i -X %s', (follow ? '-L' : ''), len(method) ? method : 'POST')
+    let quote = &shellxquote == '"' ?  "'" : '"'
+    for key in keys(headdata)
+      if has('win32')
+        let command .= " -H " . quote . key . ": " . substitute(headdata[key], '"', '"""', 'g') . quote
+      else
+        let command .= " -H " . quote . key . ": " . headdata[key] . quote
+      endif
+    endfor
+    let command .= " ".quote.url.quote
+    call writefile(split(postdatastr, "\n"), file, "b")
+    return command . " --data-binary @" . quote.file.quote
+  elseif executable('wget')
+    let command = printf('wget -O- --save-headers --server-response -q %s', follow ? '-L' : '')
+    let headdata['X-HTTP-Method-Override'] = method
+    let quote = &shellxquote == '"' ?  "'" : '"'
+    for key in keys(headdata)
+      if has('win32')
+        let command .= " --header=" . quote . key . ": " . substitute(headdata[key], '"', '"""', 'g') . quote
+      else
+        let command .= " --header=" . quote . key . ": " . headdata[key] . quote
+      endif
+    endfor
+    let command .= " ".quote.url.quote
+    call writefile(split(postdatastr, "\n"), file, "b")
+"     let res = s:system(command . " --post-data @" . quote.file.quote)
+    return command . " --post-data @" . quote.file.quote
+  else
+    throw "require `curl` or `wget` command"
+  endif
+endfunction
+
+
 function! s:parse_result(result)
   let res = a:result
   let follow =  1
@@ -121,6 +169,29 @@ function! s:make_get_process(...)
 
 	return process
 endfunction
+
+
+
+function! s:make_post_process(...)
+	let cmd = call("s:build_post_command", a:000)
+	let process = s:Process.make(cmd)
+	function! process._then(output, ...)
+		if !has_key(self, "then")
+			return
+		endif
+		return call(self.then, [s:parse_result(a:output)] + a:000, self)
+	endfunction
+	
+	function! process.get()
+		call self.wait()
+		return s:parse_result(self.as_result().body)
+	endfunction
+
+	return process
+endfunction
+
+
+
 
 
 let &cpo = s:save_cpo
