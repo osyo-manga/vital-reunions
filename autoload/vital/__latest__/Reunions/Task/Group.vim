@@ -64,7 +64,7 @@ function! s:base.update()
 	for task in self.variables.tasks
 		try
 			if has_key(task, "__reunions_task_apply")
-				return task.__reunions_task_apply(self)
+				call task.__reunions_task_apply(self)
 			else
 				call task.apply(self)
 			endif
