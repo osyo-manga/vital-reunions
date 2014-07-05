@@ -54,7 +54,12 @@ endfunction
 
 
 function! s:timer(...)
-	return call(s:Task.make_timer, a:000, s:Task)
+	return s:register(call(s:Task.make_timer, a:000, s:Task))
+endfunction
+
+
+function! s:cursorhold(...)
+	return s:register(call(s:Task.make_cursorhold, a:000, s:Task))
 endfunction
 
 

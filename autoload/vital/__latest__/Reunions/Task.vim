@@ -7,6 +7,7 @@ function! s:_vital_loaded(V)
 	let s:V = a:V
 	let s:Group  = s:V.import("Reunions.Task.Group")
 	let s:Timer  = s:V.import("Reunions.Task.Timer")
+	let s:CursorHold = s:V.import("Reunions.Task.CursorHold")
 	let s:global = s:Group.make()
 endfunction
 
@@ -49,6 +50,11 @@ function! s:make_timer(...)
 endfunction
 
 
+function! s:make_cursorhold(...)
+	return call(s:CursorHold.make, a:000, s:global)
+endfunction
+
+
 function! s:log()
 	return s:global.log()
 endfunction
@@ -56,6 +62,11 @@ endfunction
 
 function! s:size()
 	return s:global.size()
+endfunction
+
+
+function! s:debug()
+	return s:global
 endfunction
 
 

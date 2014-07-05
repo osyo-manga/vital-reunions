@@ -21,7 +21,7 @@ endfunction
 
 function! s:make(task, time)
 	if type(a:task) == type(function("tr"))
-		return s:make({ "apply" : a:task })
+		return s:make({ "apply" : a:task }, a:time)
 	endif
 	let result = extend(deepcopy(s:base), a:task)
 	let result.__reunions_task_timer = {
