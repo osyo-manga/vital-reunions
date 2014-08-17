@@ -31,10 +31,10 @@ endfunction
 
 
 function! s:update_in_cursorhold(...)
+	call s:update()
 	if get(a:, 1, 0) && s:Task.size()
 		call s:_repeat_cursorhold()
 	endif
-	call s:update()
 endfunction
 
 
