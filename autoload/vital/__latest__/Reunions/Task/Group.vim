@@ -30,10 +30,12 @@ endfunction
 
 
 function! s:base.add_log(mes)
+	echom "aaaaaaaaaaaaaaaaa"
+	echom v:throwpoint
 	let self.variables.log = self.variables.log
 \		. "\n\n------------------------------\n"
 \		. a:mes . "\n"
-\		. 'Caught "' . v:exception "\n"
+\		. 'Caught "' . v:exception . "\n"
 \		. '" in ' . v:throwpoint . ""
 endfunction
 
