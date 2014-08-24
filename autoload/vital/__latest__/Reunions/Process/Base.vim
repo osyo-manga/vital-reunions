@@ -68,6 +68,7 @@ function! s:base.kill(...)
 	if !exists("self.__reunions_process_base.vimproc")
 		return 0
 	endif
+
 	let vimproc = self.__reunions_process_base.vimproc
 	if self.is_exit()
 		let self.__reunions_process_base.status =
