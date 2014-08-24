@@ -40,7 +40,7 @@ function! s:base.input(text, ...)
 	call self.wait()
 	let vimproc = self.__reunions_process_base.vimproc
 	call vimproc.stdin.write(a:text . "\n")
-	let self.__reunions_process_interactive.log .= self.__reunions_process_base.result
+	let self.__reunions_process_interactive.log .= self.__reunions_process_base.result . a:text . "\n"
 	let self.__reunions_process_base.result = ""
 	let self.__reunions_process_base.status = "processing"
 	let self.__reunions_process_interactive.endpat
@@ -87,6 +87,4 @@ function! s:make(command, endpat)
 	let process.__reunions_process_interactive.endpat = a:endpat
 	return process
 endfunction
-
-
 
