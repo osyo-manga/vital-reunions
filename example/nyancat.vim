@@ -7,7 +7,7 @@ let s:Reunions = vital#of("vital").import("Reunions")
 " call ReunionsExampleNyancatStart("new")
 function! ReunionsExampleNyancatStart(opencmd)
 	execute a:opencmd
-	call setline(1, s:aa_list[0])
+	call append(1, s:aa_list[0])
 	call s:highlight()
 	let task = {
 \		"bufnr" : bufnr("%"),
@@ -29,7 +29,7 @@ augroup reunions-example
 	" プロセスの更新を行うための関数
 	" 任意のタイミングで定期的に呼び出す必要がある
 	" このタイミングで s:task.apply が呼び出される
-	autocmd CursorHold * call s:Reunions.update_in_cursorhold(1)
+	autocmd CursorHold,CursorHoldI * call s:Reunions.update_in_cursorhold(1)
 augroup END
 
 
