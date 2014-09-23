@@ -37,7 +37,7 @@ function! s:test_status()
 	Assert irb.status() == "processing"
 	call irb.wait()
 	Assert irb.kill(1) == 0
-	Assert irb.status() == "success"
+	Assert irb.status() == "kill"
 	call irb.start()
 	Assert irb.status() == "processing"
 	call irb.wait()
@@ -114,7 +114,7 @@ function! s:test_exit()
 	call irb.wait()
 	Assert irb.status() == "success"
 
-	Assert irb.kill(1) == 0
+	Assert irb.kill(1) == -1
 endfunction
 
 

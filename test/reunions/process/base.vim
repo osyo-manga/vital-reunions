@@ -9,6 +9,12 @@ let s:TaskGroup = vital#of("vital").import("Reunions.Task.Group")
 function! s:test_process()
 	let ruby = s:Base.make("ruby")
 	call ruby.start("-e 'print 42'")
+	sleep 1
+	Assert !ruby.is_exit()
+	Assert ruby.is_alive()
+	call ruby.wait()
+	Assert ruby.as_result().body == "42"
+	Assert ruby.as_result().status == "success"
 	let result = ruby.get()
 	Assert result == "42"
 endfunction
@@ -18,6 +24,7 @@ function! s:test_status()
 	let ruby = s:Base.make("ruby")
 	Assert ruby.status() == "none"
 	call ruby.start("-e 'sleep 1; print 42'")
+	Assert ruby.update() == "processing"
 	Assert ruby.status() == "processing"
 	let result =  ruby.get()
 	Assert ruby.status() == "success"
@@ -53,6 +60,18 @@ function! s:test_then()
 endfunction
 
 
+function! s:test_then2()
+	let ruby = s:Base.make("ruby")
+	call ruby.start("-e 'print 42'")
+	sleep 1
+	function! ruby.then(result, ...)
+		let self.result = a:result
+	endfunction
+	call ruby.wait()
+	Assert ruby.result == "42"
+endfunction
+
+
 function! s:test_kill()
 	let ruby = s:Base.make("ruby")
 	call ruby.start("-e '$stdout.sync = true; print 42; sleep 1; print 30'")
@@ -60,6 +79,28 @@ function! s:test_kill()
 	Assert ruby.status() == "processing"
 	call ruby.kill(1)
 	Assert ruby.status() == "kill"
+endfunction
+
+
+function! s:test_is_killed()
+	let ruby = s:Base.make("ruby")
+	call ruby.start("-e '$stdout.sync = true; print 42; sleep 1; print 30'")
+	Assert !ruby.is_killed()
+	call ruby.kill()
+	Assert !ruby.is_killed()
+	call ruby.kill(1)
+	Assert ruby.is_killed()
+
+	let ruby = s:Base.make("ruby")
+	call ruby.start("-e 'print 42'")
+	call ruby.wait()
+	Assert ruby.is_killed()
+
+	let ruby = s:Base.make("ruby")
+	call ruby.start("-e 'pri 42'")
+	call ruby.wait()
+	Assert ruby.is_killed()
+	Assert ruby.status() == 'failure'
 endfunction
 
 
@@ -74,6 +115,14 @@ function! s:test_wait_for()
 	Assert ruby.status() == "kill"
 	Assert ruby.as_result().body == "42"
 " 	Assert ruby.status() == "failure"
+endfunction
+
+
+function! s:test_kill_force()
+	let ruby = s:Base.make("ruby")
+	call ruby.start("-e 'sleep 1; print 42'")
+	call ruby.kill_force()
+	Assert ruby.is_killed()
 endfunction
 
 
