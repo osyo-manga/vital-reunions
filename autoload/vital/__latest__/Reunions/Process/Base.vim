@@ -57,7 +57,7 @@ function! s:base.kill(...)
 	" ↓の行をコメントアウトすると再現しなくなる
 " 	call vimproc.kill(9)
 	call vimproc.waitpid()
-	call self._then()
+	call self._then(self.__reunions_process_base.result, self.as_result())
 endfunction
 
 
@@ -123,9 +123,9 @@ function! s:base.get()
 endfunction
 
 
-function! s:base._then()
+function! s:base._then(...)
 	if has_key(self, "then")
-		return self.then(self.__reunions_process_base.result, self.as_result())
+		return call(self.then, a:000, self)
 	endif
 endfunction
 
