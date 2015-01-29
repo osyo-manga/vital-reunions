@@ -54,9 +54,13 @@ function! s:base.kill(...)
 	let vimproc = self.__reunions_process_base.vimproc
 	call vimproc.stdout.close()
 	call vimproc.stderr.close()
-	" ↓の行をコメントアウトすると再現しなくなる
-" 	call vimproc.kill(9)
-	call vimproc.waitpid()
+
+" 	let sig = get(a:, 2, g:vimproc#SIGTERM)
+	if exists("a:2")
+		call vimproc.kill(a:2)
+	else
+		call vimproc.waitpid()
+	endif
 	call self._then(self.__reunions_process_base.result, self.as_result())
 endfunction
 
