@@ -159,7 +159,7 @@ function! s:make_get_process(...)
 		if !has_key(self, "then")
 			return
 		endif
-		return call(self.then, [s:parse_result(a:output)] + a:000, self)
+		return call(self.then, [self.get()] + a:000, self)
 	endfunction
 	
 	function! process.get()
@@ -179,7 +179,7 @@ function! s:make_post_process(...)
 		if !has_key(self, "then")
 			return
 		endif
-		return call(self.then, [s:parse_result(a:output)] + a:000, self)
+		return call(self.then, [self.get()] + a:000, self)
 	endfunction
 	
 	function! process.get()
