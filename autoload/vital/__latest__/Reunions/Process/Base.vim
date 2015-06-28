@@ -12,14 +12,20 @@ let s:base = {
 
 function! s:base.start(...)
 	let args = get(a:, 1, "")
-	let args = get(a:, 1, "")
+	let input = get(a:, 2, "")
 	let self.__reunions_process_base.result = ""
 	let self.__reunions_process_base.vimproc
 \		= vimproc#pgroup_open(self.__reunions_process_base.command . ' ' . args)
+	if input != ""
+		call self.__reunions_process_base.vimproc.stdin.write(input)
+	endif
 endfunction
 
 
-function! s:base.update()
+function! s:base.update(...)
+	 let maxsize = get(a:000, 0, -1)
+	 let timeout = get(a:000, 1, 10)
+
 	if !self.is_alive() || self.is_exit()
 		return self.status()
 	endif
@@ -27,11 +33,11 @@ function! s:base.update()
 		let vimproc = self.__reunions_process_base.vimproc
 		let var = self.__reunions_process_base
 		if !vimproc.stdout.eof
-			let var.result .= vimproc.stdout.read()
+			let var.result .= vimproc.stdout.read(maxsize, timeout)
 		endif
 
 		if !vimproc.stderr.eof
-			let var.result .= vimproc.stderr.read()
+			let var.result .= vimproc.stderr.read(maxsize, timeout)
 		endif
 		let var.result = substitute(var.result, "\r\n", "\n", "g")
 	finally
@@ -61,7 +67,8 @@ function! s:base.kill(...)
 	else
 		call vimproc.waitpid()
 	endif
-	call self._then(self.__reunions_process_base.result, self.as_result())
+	call self._then(self.get(), self.as_result())
+" 	call self._then(self.__reunions_process_base.result, self.as_result())
 endfunction
 
 
